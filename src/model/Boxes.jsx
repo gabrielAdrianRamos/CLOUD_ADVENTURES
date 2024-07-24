@@ -1,10 +1,11 @@
-import { Box } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 
 const Boxes = () => {
+  const { scene } = useGLTF("/missile.glb");
   return (
-    <Box scale={2}>
-      <meshStandardMaterial color={"blue"} />
-    </Box>
+    <mesh>
+      <primitive object={scene} />
+    </mesh>
   );
 };
 

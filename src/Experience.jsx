@@ -88,6 +88,7 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
       <RigidBody
         ref={obstacleRef}
         position={[35, 0, 0]}
+        rotation={[0, 3.2, 0]}
         colliders="cuboid"
         sensor
         onIntersectionEnter={() => {
