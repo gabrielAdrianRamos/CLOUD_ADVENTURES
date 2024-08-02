@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unknown-property */
 import { OrbitControls, useKeyboardControls } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Controls } from "./App";
 import { useFrame } from "@react-three/fiber";
 import { Airplane } from "./model/Airplane";
@@ -20,10 +20,6 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
 
   const [, get] = useKeyboardControls();
   const vel = new Vector3();
-
-  const [spawnRate, setSpawnRate] = useState(250);
-  const frames = useRef(0);
-  const [enemies, setEnemies] = useState([]);
 
   //Random Position of Y
   const minM = -20;
@@ -77,32 +73,6 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
       obstacleRef.current.setLinvel({ x: -3, y: 0, z: 0 });
     }
     movePlane();
-
-    if (frames.current % spawnRate === 0) {
-      // Adjust spawnRate dynamically
-      if (spawnRate > 20) setSpawnRate(spawnRate - 2);
-
-      const newEnemy = (
-        <RigidBody
-          key={frames.current}
-          ref={obstacleRef}
-          position={[35, posY, 0]}
-          rotation={[0, 3.2, 0]}
-          colliders="cuboid"
-          sensor
-          onIntersectionEnter={() => {
-            setIntersection(true);
-            setReady(false);
-          }}
-        >
-          <Boxes />
-        </RigidBody>
-      );
-
-      setEnemies((prevEnemies) => [...prevEnemies, newEnemy]);
-    }
-
-    frames.current++;
   });
 
   return (
@@ -121,7 +91,7 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
         <Airplane />
       </RigidBody>
 
-      {/* <RigidBody
+      <RigidBody
         ref={obstacleRef}
         position={[35, posY, 0]}
         rotation={[0, 3.2, 0]}
@@ -133,8 +103,7 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
         }}
       >
         <Boxes />
-      </RigidBody> */}
-      <group>{enemies}</group>
+      </RigidBody>
     </>
   );
 };
