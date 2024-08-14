@@ -2,12 +2,12 @@
 /* eslint-disable react/no-unknown-property */
 import { OrbitControls, useKeyboardControls } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Controls } from "./App";
 import { useFrame } from "@react-three/fiber";
 import { Airplane } from "./model/Airplane";
 import { Vector3 } from "three";
-import Boxes from "./model/Boxes";
+import { Missile } from "./model/Missile";
 import Clouds from "./model/Clouds";
 
 let MOVEMENT_SPEED;
@@ -21,9 +21,38 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
   const [, get] = useKeyboardControls();
   const vel = new Vector3();
 
+  const [spawnRate, setSpawnRate] = useState(300);
+  const frames = useRef(0);
+  const [enemies, setEnemies] = useState([]);
+
+  const spawner = () => {
+    if (frames.current % spawnRate === 0) {
+      if (spawnRate > 20) setSpawnRate(spawnRate - 2);
+
+      const newEnemy = (
+        <RigidBody
+          ref={obstacleRef}
+          position={[35, posY, 0]}
+          rotation={[0, 3.2, 0]}
+          colliders="cuboid"
+          sensor
+          onIntersectionEnter={() => {
+            setIntersection(true);
+            setReady(false);
+          }}
+        >
+          <Missile />
+        </RigidBody>
+      );
+
+      setEnemies((prevEnemies) => [...prevEnemies, newEnemy]);
+    }
+    frames.current++;
+  };
+
   //Random Position of Y
-  const minM = -20;
-  const maxM = 20;
+  const minM = -17;
+  const maxM = 17;
   const randomPosY = Math.floor(Math.random() * (maxM - minM + 1)) + minM;
   const posY = randomPosY;
 
@@ -73,6 +102,7 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
       obstacleRef.current.setLinvel({ x: -3, y: 0, z: 0 });
     }
     movePlane();
+    spawner();
   });
 
   return (
@@ -91,7 +121,7 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
         <Airplane />
       </RigidBody>
 
-      <RigidBody
+      {/* <RigidBody
         ref={obstacleRef}
         position={[35, posY, 0]}
         rotation={[0, 3.2, 0]}
@@ -103,7 +133,8 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
         }}
       >
         <Boxes />
-      </RigidBody>
+      </RigidBody> */}
+      <group>{enemies}</group>
     </>
   );
 };
