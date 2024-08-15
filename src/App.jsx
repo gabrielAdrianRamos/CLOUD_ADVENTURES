@@ -32,7 +32,7 @@ function App() {
       <KeyboardControls map={map}>
         <Canvas orthographic camera={{ zoom: 25, position: [0, 0, 100] }}>
           <color attach="background" args={["#1c96c5"]} />
-          <Physics gravity={[0, 0, 0]} debug>
+          <Physics gravity={[0, 0, 0]}>
             <Experience
               ready={ready}
               setReady={setReady}

@@ -51,8 +51,8 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
   };
 
   //Random Position of Y
-  const minM = -17;
-  const maxM = 17;
+  const minM = -15;
+  const maxM = 15;
   const randomPosY = Math.floor(Math.random() * (maxM - minM + 1)) + minM;
   const posY = randomPosY;
 
@@ -85,13 +85,18 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
     // //obstacle gameobject
     obstacleRef.current.setTranslation({ x: 35, y: 0, z: 0 });
     obstacleRef.current.setLinvel({ x: 0, y: 0, z: 0 });
+
+    //reset spawn
+    setSpawnRate(300);
+    frames.current = 0;
+    setEnemies([]);
   };
 
   useEffect(() => {
     if (intersection) {
       setTimeout(() => reset(), 90);
     }
-  });
+  }, [intersection]);
 
   useFrame(() => {
     if (intersection || !ready) {
@@ -108,8 +113,8 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
   return (
     <>
       <directionalLight position={[1, 2, 1]} intensity={2} />
-      <ambientLight intensity={2} />
-      <hemisphereLight skyColor="#FDB813" groundColor="#cfecf7" intensity={3} />
+      <ambientLight intensity={1} />
+      <hemisphereLight skyColor="#FDB813" groundColor="#cfecf7" intensity={1} />
       <OrbitControls />
       <Clouds />
       <RigidBody
