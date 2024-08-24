@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
-import { OrbitControls, useKeyboardControls } from "@react-three/drei";
+import { useKeyboardControls } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import { useEffect, useRef, useState } from "react";
 import { Controls } from "./App";
@@ -104,7 +104,7 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
     }
     if (ready) {
       MOVEMENT_SPEED = 6;
-      obstacleRef.current.setLinvel({ x: -3, y: 0, z: 0 });
+      obstacleRef.current.setLinvel({ x: -3.5, y: 0, z: 0 });
     }
     movePlane();
     spawner();
@@ -115,7 +115,6 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
       <directionalLight position={[1, 2, 1]} intensity={2} />
       <ambientLight intensity={1} />
       <hemisphereLight skyColor="#FDB813" groundColor="#cfecf7" intensity={1} />
-      <OrbitControls />
       <Clouds />
       <RigidBody
         colliders="trimesh"
