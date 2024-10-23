@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unknown-property */
 import { useKeyboardControls } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Controls } from "./App";
 import { useFrame } from "@react-three/fiber";
 import { Airplane } from "./model/Airplane";
@@ -76,7 +76,7 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
     sphere.current.setLinvel(vel, true);
   };
 
-  const reset = () => {
+  const reset = useCallback(() => {
     //plane gameobject
     sphere.current.setTranslation({ x: -25, y: -3, z: 0 });
     sphere.current.setLinvel({ x: 0, y: 0, z: 0 });
@@ -90,13 +90,16 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
     setSpawnRate(300);
     frames.current = 0;
     setEnemies([]);
-  };
+  }, []);
 
   useEffect(() => {
+    let intervalId;
     if (intersection) {
-      setTimeout(() => reset(), 90);
+      intervalId = setTimeout(() => reset(), 90);
     }
-  }, [intersection]);
+
+    return () => clearInterval(intervalId);
+  }, [intersection, reset]);
 
   useFrame(() => {
     if (intersection || !ready) {
@@ -124,20 +127,6 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
       >
         <Airplane />
       </RigidBody>
-
-      {/* <RigidBody
-        ref={obstacleRef}
-        position={[35, posY, 0]}
-        rotation={[0, 3.2, 0]}
-        colliders="cuboid"
-        sensor
-        onIntersectionEnter={() => {
-          setIntersection(true);
-          setReady(false);
-        }}
-      >
-        <Boxes />
-      </RigidBody> */}
       <group>{enemies}</group>
     </>
   );
