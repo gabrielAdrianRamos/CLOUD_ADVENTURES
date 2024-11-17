@@ -93,13 +93,11 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
   }, []);
 
   useEffect(() => {
-    let intervalId;
     if (intersection) {
-      intervalId = setTimeout(() => reset(), 90);
+      reset();
+      setIntersection(false);
     }
-
-    return () => clearInterval(intervalId);
-  }, [intersection, reset]);
+  }, [intersection, reset, setIntersection]);
 
   useFrame(() => {
     if (intersection || !ready) {

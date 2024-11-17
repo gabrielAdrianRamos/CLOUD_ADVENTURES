@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-const Overlay = ({ ready, setReady, intersection }) => {
+const Overlay = ({ ready, setReady }) => {
   return (
     <>
       <div
@@ -11,15 +11,8 @@ const Overlay = ({ ready, setReady, intersection }) => {
         <img src="/assets/cloud.png" alt="cloudone" className="cloud-one" />
         <img src="/assets/cloud.png" alt="cloudone" className="cloud-two" />
         <div className="title">
-          {intersection ? (
-            <img
-              src="/assets/gameover.png"
-              alt="gameover"
-              className="game-over"
-            />
-          ) : (
-            <img src="/assets/title.png" alt="title" className="cloud-title" />
-          )}
+          <img src="/assets/title.png" alt="title" className="cloud-title" />
+
           <h5>Click to play</h5>
         </div>
         <div className="stack">
@@ -28,15 +21,7 @@ const Overlay = ({ ready, setReady, intersection }) => {
               setTimeout(() => setReady(true), 200);
             }}
           >
-            {intersection ? (
-              <img
-                src="/assets/refresh.png"
-                alt="refresh"
-                className="buttons"
-              />
-            ) : (
-              <img src="/assets/play1.png" alt="play" className="buttons" />
-            )}
+            <img src="/assets/play1.png" alt="play" className="buttons" />
           </button>
         </div>
       </div>

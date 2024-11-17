@@ -28,7 +28,7 @@ function App() {
 
   return (
     <>
-      <Overlay ready={ready} setReady={setReady} intersection={intersection} />
+      <Overlay ready={ready} setReady={setReady} />
       <KeyboardControls map={map}>
         <Canvas orthographic camera={{ zoom: 25, position: [0, 0, 100] }}>
           <color attach="background" args={["#1c96c5"]} />
