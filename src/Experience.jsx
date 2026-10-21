@@ -4,7 +4,7 @@ import { useKeyboardControls } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Controls } from "./App";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Airplane } from "./model/Airplane";
 import { Vector3 } from "three";
 import { Missile } from "./model/Missile";
@@ -19,6 +19,7 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
   const obstacleRef = useRef();
 
   const [, get] = useKeyboardControls();
+  const { viewport } = useThree();
   const vel = new Vector3();
 
   const [spawnRate, setSpawnRate] = useState(300);
@@ -73,7 +74,35 @@ const Experience = ({ ready, setReady, intersection, setIntersection }) => {
     if (get()[Controls.right]) {
       vel.x += MOVEMENT_SPEED;
     }
+
+    const pos = sphere.current.translation();
+    // Mesh extents around the rigid body, including the model's upward offset.
+    const planeMinX = -2.58;
+    const planeMaxX = 3.03;
+    const planeMinY = 2.05;
+    const planeMaxY = 4.91;
+    const edgePad = 0.5;
+    const halfW = viewport.width / 2;
+    const halfH = viewport.height / 2;
+    const minX = -halfW + edgePad - planeMinX;
+    const maxX = -edgePad - planeMaxX;
+    const minY = -halfH + edgePad - planeMinY;
+    const maxY = halfH - edgePad - planeMaxY;
+
+    if (pos.x <= minX) vel.x = Math.max(0, vel.x);
+    if (pos.x >= maxX) vel.x = Math.min(0, vel.x);
+    if (pos.y <= minY) vel.y = Math.max(0, vel.y);
+    if (pos.y >= maxY) vel.y = Math.min(0, vel.y);
+
     sphere.current.setLinvel(vel, true);
+    sphere.current.setTranslation(
+      {
+        x: Math.min(maxX, Math.max(minX, pos.x)),
+        y: Math.min(maxY, Math.max(minY, pos.y)),
+        z: pos.z,
+      },
+      true
+    );
   };
 
   const reset = useCallback(() => {
